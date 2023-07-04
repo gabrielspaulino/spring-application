@@ -3,12 +3,22 @@ package com.myprojects.course.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tb_user")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String naem;
+	private String name;
 	private String email;
 	private String phone;
 	private String password;
@@ -19,7 +29,7 @@ public class User implements Serializable {
 	public User(Long id, String naem, String email, String phone, String password) {
 		super();
 		this.id = id;
-		this.naem = naem;
+		this.name = naem;
 		this.email = email;
 		this.phone = phone;
 		this.password = password;
@@ -34,11 +44,11 @@ public class User implements Serializable {
 	}
 
 	public String getNaem() {
-		return naem;
+		return name;
 	}
 
 	public void setNaem(String naem) {
-		this.naem = naem;
+		this.name = naem;
 	}
 
 	public String getEmail() {
