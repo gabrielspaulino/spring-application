@@ -52,11 +52,11 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getNaem() {
+	public String getName() {
 		return name;
 	}
 
-	public void setNaem(String naem) {
+	public void setName(String naem) {
 		this.name = naem;
 	}
 
