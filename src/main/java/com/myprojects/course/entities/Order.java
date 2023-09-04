@@ -103,6 +103,10 @@ public class Order implements Serializable {
 		return items;
 	}
 	
+	public void setItems(Set<OrderItem> items) {
+		this.items = items;
+	}
+	
 	public Double getTotal() {
 		double sum = 0.0;
 		for (OrderItem x : items) {
