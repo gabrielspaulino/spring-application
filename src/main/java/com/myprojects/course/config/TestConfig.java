@@ -41,7 +41,7 @@ public class TestConfig implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		Category c1 = new Category(null, "Eletronics");
+		Category c1 = new Category(null, "Electronics");
 		Category c2 = new Category(null, "Books");
 		Category c3 = new Category(null, "Computers");
 		
