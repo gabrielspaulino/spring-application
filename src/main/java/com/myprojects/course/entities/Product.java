@@ -1,21 +1,13 @@
 package com.myprojects.course.entities;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.myprojects.course.entities.dto.ProductDTO;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_product")
@@ -29,7 +21,18 @@ public class Product implements Serializable {
 	private String name;
 	private String description;
 	private Double price;
+
+	private Double rating;
 	private String imgUrl;
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
+	private List<Review> reviews = new ArrayList<>();
+
+	@ElementCollection
+	@MapKeyColumn(name = "specification_name")
+	@Column(name = "specification_value")
+	private Map<String, String> specifications = new HashMap<>();
 
 	@ManyToMany
 	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
@@ -41,13 +44,13 @@ public class Product implements Serializable {
 	public Product() {
 	}
 
-	public Product(Long id, String name, String description, Double price, String imgUrl) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.price = price;
-		this.imgUrl = imgUrl;
+	public Product(ProductDTO productDTO) {
+		if (productDTO.price() < 0) throw new IllegalArgumentException("Price cannot be negative");
+		this.name = productDTO.name();
+		this.imgUrl = productDTO.imgUrl();
+		this.price = productDTO.price();
+		this.rating = 0.0;
+		this.specifications = productDTO.specifications();
 	}
 
 	public Long getId() {
@@ -79,6 +82,7 @@ public class Product implements Serializable {
 	}
 
 	public void setPrice(Double price) {
+		if (price < 0) throw new IllegalArgumentException("Price cannot be negative");
 		this.price = price;
 	}
 
@@ -92,6 +96,37 @@ public class Product implements Serializable {
 
 	public Set<Category> getCategories() {
 		return categories;
+	}
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void addReview(Review review) {
+		this.reviews.add(review);
+		this.rating = reviews.stream()
+				.mapToInt(Review::getRating)
+				.average()
+				.orElse(0.0);
+	}
+
+	public Double getRating() {
+		return rating;
+	}
+
+	public void updateRating() {
+		this.rating = reviews.stream()
+				.mapToInt(Review::getRating)
+				.average()
+				.orElse(0.0);
+	}
+
+	public Map<String, String> getSpecifications() {
+		return specifications;
+	}
+
+	public void setSpecifications(Map<String, String> specifications) {
+		this.specifications = specifications;
 	}
 	
 	@JsonIgnore

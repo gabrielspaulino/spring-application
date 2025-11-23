@@ -3,17 +3,14 @@ package com.myprojects.course.resources;
 import java.net.URI;
 import java.util.List;
 
+import com.myprojects.course.entities.Review;
+import com.myprojects.course.entities.dto.ReviewDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.myprojects.course.entities.Product;
@@ -57,5 +54,21 @@ public class ProductResource {
 	public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok(obj);
+	}
+
+	@GetMapping("/compare")
+	@ResponseBody
+	@Operation(summary = "Compare products", description = "Returns the products with ID contained in the productIds parameter")
+	public ResponseEntity<List<Product>> compareProducts(@RequestParam List<String> productIds) throws BadRequestException {
+		List<Product> products = service.getComparedProducts(productIds);
+		return ResponseEntity.ok().body(products);
+	}
+
+	@PostMapping("/{id}/reviews")
+	@ResponseBody
+	@Operation(summary = "Create product review", description = "Creates a review for the product with the ID contained in the path")
+	public ResponseEntity<Review> createReview(@PathVariable("id") String id, @RequestBody ReviewDTO reviewDTO) {
+		Review review = service.createReview(reviewDTO, id);
+		return ResponseEntity.status(HttpStatus.CREATED).body(review);
 	}
 }
