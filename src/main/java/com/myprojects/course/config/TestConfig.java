@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.myprojects.course.entities.enums.OrderStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @Profile("test")
@@ -47,8 +48,8 @@ public class TestConfig implements CommandLineRunner {
 		
 		Product p1 = new Product(new ProductDTO("The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", "test.url.com", 90.5, Collections.singletonMap("numberOfPages", "500")));
 		Product p2 = new Product(new ProductDTO("Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", "test.url.com", 2190.0, Collections.singletonMap("inchesSize", "60")));
-		Product p3 = new Product(new ProductDTO("Macbook Pro", "Nam eleifend maximus tortor, at mollis.", "test.url.com", 1250.0, Collections.singletonMap("ramMemory", "16 GB")));
-		Product p4 = new Product(new ProductDTO("PC Gamer", "Donec aliquet odio ac rhoncus cursus.", "test.url.com", 1200.0, Collections.singletonMap("ramMemory", "16 GB")));
+		Product p3 = new Product(new ProductDTO("Macbook Pro", "Nam eleifend maximus tortor, at mollis.", "https://http2.mlstatic.com/D_NQ_NP_2X_896426-MLA96891614890_112025-F.webp", 1250.0, Collections.singletonMap("ramMemory", "16 GB")));
+		Product p4 = new Product(new ProductDTO("PC Gamer", "Donec aliquet odio ac rhoncus cursus.", "https://images.tcdn.com.br/img/img_prod/740836/pc_gamer_top_concordia_ryzen_5_5600x_16gb_ssd_1tb_placa_3060_fonte_600w_16159_1_cf3cdbf4047d49e563292d2000f3bb4b.png", 1200.0, Collections.singletonMap("ramMemory", "16 GB")));
 		Product p5 = new Product(new ProductDTO("Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", "test.url.com", 100.99, Collections.singletonMap("numberOfPages", "400")));
 
 		Review r1 = new Review(new ReviewDTO(5, "Amazing product!", p1));
@@ -69,9 +70,10 @@ public class TestConfig implements CommandLineRunner {
 		p5.getCategories().add(c2);
 		
 		productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
-		
-		User u1 = new User(null, "Gabriel", "gabriel@gmail.com", "999999999", "12345");
-		User u2 = new User(null, "Maria", "maria@gmail.com", "988888888", "12345");
+
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		User u1 = new User(null, "Gabriel", "gabriel@gmail.com", "999999999", encoder.encode("12345"));
+		User u2 = new User(null, "Maria", "maria@gmail.com", "988888888", encoder.encode("12345"));
 		
 		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, u1); 
 		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.WAITING_PAYMENT, u2); 

@@ -2,31 +2,35 @@ package com.myprojects.course.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "tb_user")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
+	private String username;
 	private String email;
 	private String phone;
 	private String password;
+
+	private boolean enabled;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private List<String> roles;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "client")
@@ -35,13 +39,15 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public User(Long id, String naem, String email, String phone, String password) {
+	public User(Long id, String username, String email, String phone, String password) {
 		super();
 		this.id = id;
-		this.name = naem;
+		this.username = username;
 		this.email = email;
 		this.phone = phone;
 		this.password = password;
+		this.roles = List.of("USER_ROLE");
+		this.enabled = true;
 	}
 
 	public Long getId() {
@@ -52,12 +58,14 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+
+	@Override
+	public String getUsername() {
+		return username;
 	}
 
-	public void setName(String naem) {
-		this.name = naem;
+	public void setName(String username) {
+		this.username = username;
 	}
 
 	public String getEmail() {
@@ -86,6 +94,37 @@ public class User implements Serializable {
 
 	public List<Order> getOrders() {
 		return orders;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles.stream()
+				.map(SimpleGrantedAuthority::new)
+				.toList();
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
 	}
 
 	@Override
