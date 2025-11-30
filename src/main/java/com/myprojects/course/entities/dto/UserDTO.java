@@ -1,4 +1,4 @@
-package com.myprojects.course.entities;
+package com.myprojects.course.entities.dto;
 
 import java.util.List;
 

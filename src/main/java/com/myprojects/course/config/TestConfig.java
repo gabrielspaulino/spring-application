@@ -8,6 +8,7 @@ import java.util.List;
 import com.myprojects.course.entities.*;
 import com.myprojects.course.entities.dto.ProductDTO;
 import com.myprojects.course.entities.dto.ReviewDTO;
+import com.myprojects.course.entities.dto.UserDTO;
 import com.myprojects.course.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

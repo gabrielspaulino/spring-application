@@ -3,6 +3,7 @@ package com.myprojects.course.resources;
 import java.net.URI;
 import java.util.List;
 
+import com.myprojects.course.entities.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,10 +41,10 @@ public class UserResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<User> insert(@RequestBody User obj) {
-		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+	public ResponseEntity<User> insert(@RequestBody UserDTO userDTO) {
+		User user = service.insert(new User(userDTO));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+		return ResponseEntity.created(uri).body(user);
 	}
 	
 	@DeleteMapping(value = "/{id}")
