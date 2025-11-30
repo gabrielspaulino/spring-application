@@ -39,15 +39,13 @@ public class User implements Serializable, UserDetails {
 	public User() {
 	}
 
-	public User(Long id, String username, String email, String phone, String password) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.phone = phone;
-		this.password = password;
-		this.roles = List.of("USER_ROLE");
-		this.enabled = true;
+	public User(UserDTO userDTO) {
+		this.username = userDTO.username();
+		this.email = userDTO.email();
+		this.phone = userDTO.phone();
+		this.password = userDTO.password();
+		this.enabled = userDTO.enabled();
+		this.roles = userDTO.roles();
 	}
 
 	public Long getId() {

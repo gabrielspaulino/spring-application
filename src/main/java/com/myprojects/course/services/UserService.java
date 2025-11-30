@@ -69,7 +69,7 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> obj = repository.findByUsername(username);
+		Optional<User> obj = repository.findByEmail(username);
 		return obj.orElseThrow(() -> new ResourceNotFoundException());
 	}
 }
