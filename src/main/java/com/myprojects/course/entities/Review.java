@@ -1,8 +1,11 @@
 package com.myprojects.course.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myprojects.course.entities.dto.ReviewDTO;
 import jakarta.persistence.*;
+
+import java.time.Instant;
 
 @Entity
 @Table(name = "tb_review")
@@ -11,6 +14,9 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    private Instant createdAt;
 
     private int rating;
 
@@ -25,6 +31,7 @@ public class Review {
         this.rating = reviewDTO.rating();
         this.comment = reviewDTO.comment();
         this.product = reviewDTO.product();
+        this.createdAt = Instant.now();
     }
 
     public Review() {

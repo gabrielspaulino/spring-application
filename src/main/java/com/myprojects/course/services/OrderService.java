@@ -3,6 +3,8 @@ package com.myprojects.course.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.myprojects.course.repositories.AddressRepository;
+import com.myprojects.course.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -28,6 +30,12 @@ public class OrderService {
 	@Autowired
 	private OrderItemRepository orderItemRepository;
 
+	@Autowired
+	private AddressRepository addressRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
 	public List<Order> findAll() {
 		return repository.findAll();
 	}
@@ -38,6 +46,8 @@ public class OrderService {
 	}
 	
 	public Order insert(Order obj) {
+		addressRepository.save(obj.getAddress());
+		obj.setClient(userRepository.findByEmail(obj.getClient().getEmail()).orElse(null));
 		Order savedObj = repository.save(obj);
 		obj.getItems().forEach(item -> {
 			orderItemRepository.save(new OrderItem(obj, item.getProduct(), item.getQuantity(), item.getPrice()));

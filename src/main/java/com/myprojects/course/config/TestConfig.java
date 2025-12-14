@@ -41,6 +41,9 @@ public class TestConfig implements CommandLineRunner {
 	@Autowired
 	private ReviewRepository reviewRepository;
 
+	@Autowired
+	private AddressRepository addressRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
 
@@ -60,9 +63,13 @@ public class TestConfig implements CommandLineRunner {
 		Review r4 = new Review(new ReviewDTO(5, "Great product!", p4));
 		Review r5 = new Review(new ReviewDTO(2, "Bad product", p4));
 
+		Address a1 = new Address(null, "Rua A", "ap 33", "Santos", "SP", "Brasil", "99999999");
+		Address a2 = new Address(null, "Rua B", "ap 71", "Rio de Janeiro", "RJ", "Brasil", "00000000");
+
 		categoryRepository.saveAll(Arrays.asList(c1, c2, c3));
 		productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 		reviewRepository.saveAll(Arrays.asList(r1, r2, r3, r4, r5));
+		addressRepository.saveAll(Arrays.asList(a1, a2));
 
 		p1.getCategories().add(c2);
 		p2.getCategories().add(c1);
@@ -77,18 +84,18 @@ public class TestConfig implements CommandLineRunner {
 		User u1 = new User(new UserDTO("Gabriel", "gabriel@gmail.com", "999999999", encoder.encode("12345"), true, List.of("USER_ROLE")));
 		User u2 = new User(new UserDTO("Maria", "maria@gmail.com", "988888888", encoder.encode("12345"), true, List.of("USER_ROLE")));
 
-		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, u1);
-		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.WAITING_PAYMENT, u2);
-		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.WAITING_PAYMENT, u1);
+		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, u1, Collections.emptySet(), a1);
+		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.WAITING_PAYMENT, u2, Collections.emptySet(), a2);
+		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.WAITING_PAYMENT, u1, Collections.emptySet(), a1);
 				
 		userRepository.saveAll(Arrays.asList(u1, u2));
 		orderRepository.saveAll(Arrays.asList(o1, o2, o3));
-		
-		OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice()); 
-		OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice()); 
-		OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice()); 
+
+		OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+		OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+		OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
 		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
-		
+
 		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
 		
 		Payment pay1 = new Payment(null, Instant.parse("2019-06-20T21:53:07Z"), o1);

@@ -3,6 +3,7 @@ package com.myprojects.course.entities;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -39,6 +40,10 @@ public class Order implements Serializable {
 	@JoinColumn(name = "client_id")
 	private User client;
 	
+	@ManyToOne
+	@JoinColumn(name = "address_id")
+	private Address address;
+	
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
 	
@@ -49,12 +54,14 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
+	public Order(Long id, Instant moment, OrderStatus orderStatus, User client, Set<OrderItem> items, Address address) {
 		super();
 		this.id = id;
 		this.moment = moment;
-		setOrderStatus(orderStatus); 	 	
+		setOrderStatus(orderStatus);
+		this.items = items;
 		this.client = client;
+		this.address = address;
 	}
 
 	public Long getId() {
@@ -89,6 +96,14 @@ public class Order implements Serializable {
 
 	public void setClient(User client) {
 		this.client = client;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	
 	public Payment getPayment() {
