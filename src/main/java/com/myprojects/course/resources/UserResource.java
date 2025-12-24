@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import com.myprojects.course.entities.dto.UserDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,18 +30,21 @@ public class UserResource {
 	private UserService service;
 
 	@GetMapping
+	@Operation(summary = "List users", description = "Returns all users in the database")
 	public ResponseEntity<List<User>> findAll() {
 		List<User> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/{id}")
+	@Operation(summary = "Find user by ID", description = "Returns the user with the ID contained in the path")
 	public ResponseEntity<User> findById(@PathVariable Long id) {
 		User obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@PostMapping
+	@Operation(summary = "Create user", description = "Creates a new user")
 	public ResponseEntity<User> insert(@RequestBody UserDTO userDTO) {
 		User user = service.insert(new User(userDTO));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
@@ -48,12 +52,14 @@ public class UserResource {
 	}
 	
 	@DeleteMapping(value = "/{id}")
+	@Operation(summary = "Delete user", description = "Deletes the user with the ID contained in the path")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping(value = "/{id}")
+	@Operation(summary = "Update user", description = "Updates the user with the ID contained in the path")
 	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok(obj);

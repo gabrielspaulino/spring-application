@@ -2,6 +2,7 @@ package com.myprojects.course.resources;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +21,14 @@ public class AddressResource {
     private AddressService service;
 
     @GetMapping
+    @Operation(summary = "List addresses", description = "Returns all addresses in the database")
     public ResponseEntity<List<Address>> findAll() {
         List<Address> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}")
+    @Operation(summary = "Find address by ID", description = "Returns the address with the ID contained in the path")
     public ResponseEntity<Address> findById(@PathVariable Long id) {
         Address obj = service.findById(id);
         return ResponseEntity.ok().body(obj);

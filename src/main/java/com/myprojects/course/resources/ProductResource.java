@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.myprojects.course.entities.Product;
-import com.myprojects.course.entities.User;
 import com.myprojects.course.services.ProductService;
 
 @RestController
@@ -24,33 +23,38 @@ public class ProductResource {
 
 	@Autowired
 	private ProductService service;
-	
+
 	@GetMapping
+	@Operation(summary = "List products", description = "Returns all products in the database")
 	public ResponseEntity<List<Product>> findAll() {
 		List<Product> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
-	
+
 	@GetMapping(value = "/{id}")
+	@Operation(summary = "Find product by ID", description = "Returns the product with the ID contained in the path")
 	public ResponseEntity<Product> findById(@PathVariable Long id) {
 		Product user = service.findById(id);
 		return ResponseEntity.ok().body(user);
 	}
-	
+
 	@PostMapping
+	@Operation(summary = "Create product", description = "Creates a new product")
 	public ResponseEntity<Product> insert(@RequestBody Product obj) {
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
 	}
-	
+
 	@DeleteMapping(value = "/{id}")
+	@Operation(summary = "Delete product", description = "Deletes the product with the ID contained in the path")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@PutMapping(value = "/{id}")
+	@Operation(summary = "Update product", description = "Updates the product with the ID contained in the path")
 	public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok(obj);

@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.myprojects.course.entities.dto.OrderDTO;
 import com.myprojects.course.entities.enums.OrderStatus;
 
 import jakarta.persistence.CascadeType;
@@ -54,14 +55,13 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	public Order(Long id, Instant moment, OrderStatus orderStatus, User client, Set<OrderItem> items, Address address) {
+	public Order(OrderDTO orderDTO) {
 		super();
-		this.id = id;
-		this.moment = moment;
-		setOrderStatus(orderStatus);
-		this.items = items;
-		this.client = client;
-		this.address = address;
+		this.moment = orderDTO.moment();
+		setOrderStatus(orderDTO.orderStatus());
+		this.items = orderDTO.items();
+		this.client = orderDTO.client();
+		this.address = orderDTO.address();
 	}
 
 	public Long getId() {

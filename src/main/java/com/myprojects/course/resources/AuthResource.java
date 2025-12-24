@@ -3,6 +3,7 @@ package com.myprojects.course.resources;
 import com.myprojects.course.entities.dto.AuthRequestDTO;
 import com.myprojects.course.jwt.AuthResponse;
 import com.myprojects.course.jwt.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ public class AuthResource {
     private AuthenticationManager authManager;
 
     @PostMapping("/login")
+    @Operation(summary = "User login", description = "Returns user JWT token")
     public ResponseEntity<?> login(@RequestBody AuthRequestDTO request) {
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
